@@ -1,6 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
+const path = require("path");
 
 // Initialise app
 var app = express();
@@ -11,7 +12,7 @@ app.use(express.urlencoded({
     extended: false
 }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Handlebars
 app.engine(
@@ -29,7 +30,10 @@ require("./routes/htmlRoutes")(app);
 var MONGODB_URI =
     process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+});
 
 app.listen(PORT, function () {
     console.log("Magic happens on port :  " + PORT);
